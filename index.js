@@ -1,7 +1,12 @@
 const express = require('express');
 const admin = require('firebase-admin'); // Add this line for Firebase Admin SDK
-const serviceAccount = require('./serviceAccountKey.json'); // Add this line for Firebase Admin SDK
+require('dotenv').config();
+const admin = require('firebase-admin');
+const serviceAccount = require(process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 const app = express();
 const port = 3000;
 
