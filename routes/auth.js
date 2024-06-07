@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
-
+const admin = require('firebase-admin');
 let users = [];
 const secret = 'your_jwt_secret';
 

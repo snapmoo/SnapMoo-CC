@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/auth');
 const upload = require('../middleware/upload');
-
+const admin = require('firebase-admin');
 let reports = [];
 
 router.get('/report', authMiddleware, (req, res) => {

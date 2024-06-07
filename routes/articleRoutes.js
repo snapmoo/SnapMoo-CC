@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const admin = require('firebase-admin');
 // GET /articles/pmk
 router.get('/articles/pmk', (req, res) => {
   try {

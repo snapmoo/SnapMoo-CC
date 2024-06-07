@@ -1,6 +1,16 @@
 const express = require('express');
+const admin = require('firebase-admin'); // Add this line for Firebase Admin SDK
+const serviceAccount = require('./serviceAccountKey.json'); // Add this line for Firebase Admin SDK
+
 const app = express();
 const port = 3000;
+
+// Inisialisasi Firebase Admin SDK dengan konfigurasi dari serviceAccountKey.json
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+     databaseURL: 'https://tesfirestore-425317.firebaseio.com' // Jika Anda menggunakan Realtime Database
+    // storageBucket: 'your-project-id.appspot.com' // Jika Anda menggunakan Firebase Storage
+});
 
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
@@ -23,6 +33,7 @@ app.use((err, req, res, next) => {
         next();
     }
 });
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
