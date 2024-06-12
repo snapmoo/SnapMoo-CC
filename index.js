@@ -1,37 +1,34 @@
+// index.js
 const express = require('express');
-const admin = require('firebase-admin'); // Add this line for Firebase Admin SDK
-require('dotenv').config();
 const admin = require('firebase-admin');
-const serviceAccount = require(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+const serviceAccount = require('./serviceAccountKey.json');
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
 const app = express();
-const port = 3000;
+const port = 8080;
 
-// Inisialisasi Firebase Admin SDK dengan konfigurasi dari serviceAccountKey.json
+// Initialize Firebase Admin SDK
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-     databaseURL: 'https://tesfirestore-425317.firebaseio.com' // Jika Anda menggunakan Realtime Database
-    // storageBucket: 'your-project-id.appspot.com' // Jika Anda menggunakan Firebase Storage
+    databaseURL: 'https://(default).firebaseio.com'
+    // storageBucket: 'your-project-id.appspot.com' // Uncomment if using Firebase Storage
 });
 
-const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/user');
-const predictRoutes = require('./routes/predict');
-const reportRoutes = require('./routes/report');
-const articleRoutes = require('./routes/articleRoutes');
+const authRoutes = require('./src/routes/auth').router;
+const userRoutes = require('./src/routes/user');
+const reportRoutes = require('./src/routes/report');
+const articleRoutes = require('./src/routes/articleRoutes');
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Added for URL-encoded body parsing
 
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
-app.use('/api', predictRoutes);
 app.use('/api', reportRoutes);
-app.use('/api', articleRoutes);
+app.use('/api', articleRoutes); // Add this line for article routes
 
+// Global error handler
 app.use((err, req, res, next) => {
+    console.error(err);
     if (err) {
         res.status(err.status || 500).json({ message: err.message || 'An unexpected error occurred. Please try again later.' });
     } else {
