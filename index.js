@@ -9,7 +9,7 @@ const port = 8080;
 // Initialize Firebase Admin SDK
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://(default).firebaseio.com'
+    databaseURL: 'https://snapmoo.firebaseio.com'
     // storageBucket: 'your-project-id.appspot.com' // Uncomment if using Firebase Storage
 });
 
