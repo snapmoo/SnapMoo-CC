@@ -4,7 +4,7 @@ const { env } = process;
 
 const db = new Firestore({
   projectId: env.PROJECT_ID,
-  databaseId: '(default)',
+  databaseId: 'snapmoo',
 });
 
 module.exports = db;
