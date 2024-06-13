@@ -10,13 +10,13 @@ const port = 8080;
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: 'https://snapmoo.firebaseio.com'
-    // storageBucket: 'your-project-id.appspot.com' // Uncomment if using Firebase Storage
 });
 
 const authRoutes = require('./src/routes/auth').router;
 const userRoutes = require('./src/routes/user');
 const reportRoutes = require('./src/routes/report');
 const articleRoutes = require('./src/routes/articleRoutes');
+const historyRoutes = require('./src/routes/historyRoutes'); // Add this line
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Added for URL-encoded body parsing
@@ -24,13 +24,12 @@ app.use(express.urlencoded({ extended: true })); // Added for URL-encoded body p
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', reportRoutes);
-app.use('/api', articleRoutes); // Add this line for article routes
-
+app.use('/api', articleRoutes);
+app.use('/api', historyRoutes); // Add this line for history routes
 
 app.get('/', (req, res) => {
     res.json({ message: 'Success' });
 });
-
 
 // Global error handler
 app.use((err, req, res, next) => {
