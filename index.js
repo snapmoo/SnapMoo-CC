@@ -2,6 +2,7 @@
 const express = require('express');
 const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccountKey.json');
+const path = require('path');
 
 const app = express();
 const port = 8080;
@@ -16,16 +17,20 @@ const authRoutes = require('./src/routes/auth').router;
 const userRoutes = require('./src/routes/user');
 const reportRoutes = require('./src/routes/report');
 const articleRoutes = require('./src/routes/articleRoutes');
-const historyRoutes = require('./src/routes/historyRoutes'); // Add this line
+const historyRoutes = require('./src/routes/historyRoutes');
+
+// Serve static files from the 'uploads' directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // Added for URL-encoded body parsing
+app.use(express.urlencoded({ extended: true }));
 
+// Routes
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', reportRoutes);
 app.use('/api', articleRoutes);
-app.use('/api', historyRoutes); // Add this line for history routes
+app.use('/api', historyRoutes);
 
 app.get('/', (req, res) => {
     res.json({ message: 'Success' });
