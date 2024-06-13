@@ -1,4 +1,4 @@
-const db = require('./index'); 
+const db = require('../config/firestore');
 const express = require('express');
 const router = express.Router();
 const articles = [
