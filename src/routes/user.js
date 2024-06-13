@@ -12,12 +12,12 @@ router.get('/user', authMiddleware, async (req, res) => {
         const userRef = db.collection('users').doc(req.userId);
         const userDoc = await userRef.get();
         if (!userDoc.exists) {
-            return res.status(404).json([{ message: 'User not found.' }]);
+            return res.status(404).json({ message: 'User not found.' });
         }
-        res.json([{ message: 'User profile retrieved successfully.', data: { id: userDoc.id, ...userDoc.data() } }]);
+        res.json({ message: 'User profile retrieved successfully.', data: { id: userDoc.id, ...userDoc.data() } });
     } catch (error) {
         console.error(error);
-        res.status(500).json([{ message: 'An unexpected error occurred. Please try again later.' }]);
+        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 });
 
