@@ -1,4 +1,4 @@
-const db = require('./firebaseAdmin'); // Sesuaikan dengan path yang benar ke Firebase Admin SDK
+const db = require('index.js'); 
 
 const articles = [
   {
