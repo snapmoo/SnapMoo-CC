@@ -14,7 +14,14 @@ router.get('/user', authMiddleware, async (req, res) => {
         if (!userDoc.exists) {
             return res.status(404).json({ message: 'User not found.' });
         }
-        res.json({ message: 'User profile retrieved successfully.', data: { id: userDoc.id, ...userDoc.data() } });
+        res.json({ 
+            message: 'User profile retrieved successfully.', 
+            data: { 
+                id: userDoc.id, 
+                ...userDoc.data(),
+                photo: userDoc.data().photo || null // Add photo response here
+            } 
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
@@ -45,7 +52,14 @@ router.put('/user', authMiddleware, upload.single('photo'), [
             photo: req.file ? req.file.path : userDoc.data().photo
         };
         await userRef.update(updatedData);
-        res.json({ message: 'User profile updated successfully.', data: { id: req.userId, ...updatedData } });
+        res.json({ 
+            message: 'User profile updated successfully.', 
+            data: { 
+                id: req.userId, 
+                ...updatedData,
+                photo: updatedData.photo || null // Add photo response here
+            } 
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
