@@ -26,6 +26,12 @@ app.use('/api', userRoutes);
 app.use('/api', reportRoutes);
 app.use('/api', articleRoutes); // Add this line for article routes
 
+
+app.get('/', (req, res) => {
+    res.json({ message: 'Success' });
+});
+
+
 // Global error handler
 app.use((err, req, res, next) => {
     console.error(err);
