@@ -30,7 +30,7 @@ router.post('/register', [
         const newUser = { name, email, password: hashedPassword, phone_number, createdAt: new Date() };
         const userRef = await db.collection('users').add(newUser);
 
-        res.json([{ message: 'User registered successfully.', data: { id: userRef.id, ...newUser } }]);
+        res.json({ message: 'User registered successfully.', data: { id: userRef.id, ...newUser } });
     } catch (error) {
         console.error(error);
         res.status(500).json([{ message: 'An unexpected error occurred. Please try again later.' }]);
@@ -68,7 +68,7 @@ router.post('/login', [
         }]);
     } catch (error) {
         console.error(error);
-        res.status(500).json([{ message: 'An unexpected error occurred. Please try again later.' }]);
+        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 });
 
