@@ -28,7 +28,7 @@ app.use('/api', articleRoutes); // Add this line for article routes
 
 
 app.get('/', (req, res) => {
-    res.json(Success);
+    res.json({ message: 'Success' });
 });
 
 
