@@ -62,13 +62,17 @@ router.post('/login', [
         }
 
         const token = jwt.sign({ id: userDoc.id }, secret, { expiresIn: '1h' });
+
+        // Construct photo URL if exists
+        const photoURL = user.photo ? `${req.protocol}://${req.get('host')}/uploads/${user.photo}` : null;
+
         res.json({ 
             message: 'Login successful.', 
             data: { 
                 user_id: userDoc.id, 
                 name: user.name, 
                 token, 
-                photo: user.photo || null // Add photo response here
+                photo: photoURL
             } 
         });
     } catch (error) {
