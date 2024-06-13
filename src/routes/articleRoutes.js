@@ -1,12 +1,10 @@
-// articleRoutes.js
-
 const express = require('express');
 const router = express.Router();
 const db = require('../config/firestore');
 
-// Helper function to convert Firestore Timestamp to readable date
-function convertTimestampToReadableDate(timestamp) {
-    const date = timestamp.toDate();
+// Helper function to convert string to readable date
+function convertStringToReadableDate(dateString) {
+    const date = new Date(dateString);
     return date.toLocaleString('en-US', { timeZone: 'UTC', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
 }
 
@@ -23,7 +21,7 @@ router.get('/articles', async (req, res) => {
         articlesSnapshot.forEach(doc => {
             const article = doc.data();
             if (article.date) {
-                article.date = convertTimestampToReadableDate(article.date);
+                article.date = convertStringToReadableDate(article.date);
             }
             articles.push({ id: doc.id, ...article });
         });
