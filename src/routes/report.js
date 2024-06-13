@@ -11,10 +11,10 @@ router.get('/report', authMiddleware, async (req, res) => {
     try {
         const reportsSnapshot = await db.collection('reports').get();
         const reports = reportsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        res.json([{ message: 'Reports retrieved successfully.', data: reports }]);
+        res.json({ message: 'Reports retrieved successfully.', data: reports });
     } catch (error) {
         console.error(error);
-        res.status(500).json([{ message: 'An unexpected error occurred. Please try again later.' }]);
+        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 });
 
@@ -24,12 +24,12 @@ router.get('/report/:id', authMiddleware, async (req, res) => {
         const reportRef = db.collection('reports').doc(req.params.id);
         const reportDoc = await reportRef.get();
         if (!reportDoc.exists) {
-            return res.status(404).json([{ message: 'Report not found.' }]);
+            return res.status(404).json({ message: 'Report not found.' });
         }
-        res.json([{ message: 'Report details retrieved successfully.', data: { id: reportDoc.id, ...reportDoc.data() } }]);
+        res.json({ message: 'Report details retrieved successfully.', data: { id: reportDoc.id, ...reportDoc.data() } });
     } catch (error) {
         console.error(error);
-        res.status(500).json([{ message: 'An unexpected error occurred. Please try again later.' }]);
+        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 });
 
@@ -72,10 +72,10 @@ router.post('/report', authMiddleware, upload.single('photo'), [
             createdAt: new Date()
         };
         const reportRef = await db.collection('reports').add(newReport);
-        res.json([{ message: 'Report added successfully.', data: { id: reportRef.id, ...newReport } }]);
+        res.json({ message: 'Report added successfully.', data: { id: reportRef.id, ...newReport } });
     } catch (error) {
         console.error(error);
-        res.status(500).json([{ message: 'An unexpected error occurred. Please try again later.' }]);
+        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 });
 
@@ -94,7 +94,7 @@ router.put('/report/:id', authMiddleware, upload.single('photo'), [
         const reportRef = db.collection('reports').doc(req.params.id);
         const reportDoc = await reportRef.get();
         if (!reportDoc.exists) {
-            return res.status(404).json([{ message: 'Report not found.' }]);
+            return res.status(404).json({ message: 'Report not found.' });
         }
 
         const updatedData = {
@@ -103,10 +103,10 @@ router.put('/report/:id', authMiddleware, upload.single('photo'), [
             photo: req.file ? req.file.path : reportDoc.data().photo
         };
         await reportRef.update(updatedData);
-        res.json([{ message: 'Report updated successfully.', data: { id: req.params.id, ...updatedData } }]);
+        res.json({ message: 'Report updated successfully.', data: { id: req.params.id, ...updatedData } });
     } catch (error) {
         console.error(error);
-        res.status(500).json([{ message: 'An unexpected error occurred. Please try again later.' }]);
+        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 });
 
@@ -116,14 +116,14 @@ router.delete('/report/:id', authMiddleware, async (req, res) => {
         const reportRef = db.collection('reports').doc(req.params.id);
         const reportDoc = await reportRef.get();
         if (!reportDoc.exists) {
-            return res.status(404).json([{ message: 'Report not found.' }]);
+            return res.status(404).json({ message: 'Report not found.' });
         }
 
         await reportRef.delete();
-        res.json([{ message: 'Report deleted successfully.' }]);
+        res.json({ message: 'Report deleted successfully.' });
     } catch (error) {
         console.error(error);
-        res.status(500).json([{ message: 'An unexpected error occurred. Please try again later.' }]);
+        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 });
 
