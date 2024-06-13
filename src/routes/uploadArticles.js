@@ -1,5 +1,6 @@
 const db = require('./index'); 
-
+const express = require('express');
+const router = express.Router();
 const articles = [
   {
     title: 'Jelang Idul Adha, Kenali Wabah PMK dan Tips Memilih Hewan Kurban yang Sehat',
