@@ -64,7 +64,12 @@ router.post('/login', [
         const token = jwt.sign({ id: userDoc.id }, secret, { expiresIn: '1h' });
         res.json({ 
             message: 'Login successful.', 
-            data: { user_id: userDoc.id, name: user.name, token, photo: user.photo } 
+            data: { 
+                user_id: userDoc.id, 
+                name: user.name, 
+                token, 
+                photo: user.photo || null // Add photo response here
+            } 
         });
     } catch (error) {
         console.error(error);
