@@ -71,6 +71,7 @@ router.post('/login', [
             data: { 
                 user_id: userDoc.id, 
                 name: user.name, 
+                email: user.email,
                 token, 
                 photo: photoURL
             } 

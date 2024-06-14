@@ -24,7 +24,6 @@ router.get('/articles', async (req, res) => {
             const article = doc.data();
             if (article.date) {
                 article.date = convertTimestampToReadableDate(article.date);
-                console.log(article.date)
             }
             articles.push({ id: doc.id, ...article });
         });
