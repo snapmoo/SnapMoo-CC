@@ -5,8 +5,8 @@ const router = express.Router();
 const db = require('../config/firestore');
 
 function convertTimestampToReadableDate(timestamp) {
-    const date = timestamp.toDate();
-    return date.toLocaleString('en-US', { timeZone: 'UTC', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
+    const date = new Date(timestamp._seconds * 1000 + timestamp._nanoseconds / 1000000);
+    return moment(date).format('MMM DD, YYYY');
 }
 
 // GET all articles
