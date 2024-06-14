@@ -18,7 +18,7 @@ router.get('/history', authMiddleware, async (req, res) => {
 
 // POST add prediction history
 router.post('/history', authMiddleware, async (req, res) => {
-    const { result, score, created_at } = req.body; // Tidak lagi menerima prediction_id dari body
+    const { result, score, created_at } = req.body; 
     try {
         const newHistory = {
             user_id: req.userId,
