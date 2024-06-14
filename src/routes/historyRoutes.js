@@ -1,9 +1,9 @@
 // src/routes/historyRoutes.js
 const express = require('express');
+const { v4: uuidv4 } = require('uuid'); // Import UUID library
 const router = express.Router();
 const db = require('../config/firestore');
 const authMiddleware = require('../middleware/auth');
-const upload = require('../middleware/upload');
 
 // GET prediction history
 router.get('/history', authMiddleware, async (req, res) => {
@@ -18,16 +18,17 @@ router.get('/history', authMiddleware, async (req, res) => {
 });
 
 // POST add prediction history
-router.post('/history', authMiddleware, upload.single('photo'), async (req, res) => {
-    const { result, score, created_at } = req.body;
+router.post('/history', authMiddleware, async (req, res) => {
+    const { result, score, created_at } = req.body; // Remove prediction_id from the request body
     try {
+        const prediction_id = uuidv4(); // Generate a new prediction_id
         const newHistory = {
             user_id: req.userId,
+            prediction_id,
             result,
             score,
             created_at: new Date(created_at),
-            is_saved: false,
-            photo: req.file ? req.file.path : null,
+            is_saved: false
         };
         const historyRef = await db.collection('history').add(newHistory);
         res.status(201).json({ message: 'Prediction history added successfully.', data: { id: historyRef.id, ...newHistory } });
