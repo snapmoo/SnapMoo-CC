@@ -26,7 +26,8 @@ router.post('/history', authMiddleware, upload.single('photo'), async (req, res)
             result,
             score,
             created_at: new Date(created_at),
-            is_saved: false
+            is_saved: false,
+            photo: req.file ? req.file.path : null,
         };
         const historyRef = await db.collection('history').add(newHistory);
         res.status(201).json({ message: 'Prediction history added successfully.', data: { id: historyRef.id, ...newHistory } });
