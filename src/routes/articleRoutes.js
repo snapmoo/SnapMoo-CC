@@ -5,14 +5,14 @@ const db = require('../config/firestore');
 const moment = require('moment');
 
 function convertTimestampToReadableDate(timestamp) {
-    if (timestamp && timestamp._seconds !== undefined && timestamp._nanoseconds !== undefined) {
-        const date = new Date(timestamp._seconds * 1000 + timestamp._nanoseconds / 1000000);
-        return moment(date).format('MMM DD, YYYY, h:mm:ss.SSS A');
-    } else if (timestamp instanceof Date) {
-        return moment(timestamp).format('MMM DD, YYYY, h:mm:ss.SSS A');
-    } else {
-        return null; // or a default value
-    }
+    const seconds = timestamp._seconds;
+    const nanoseconds = timestamp._nanoseconds;
+
+    // Buat objek Date berdasarkan seconds dan nanoseconds
+    const date = new Date(seconds * 1000 + nanoseconds / 1000000);
+
+    // Format tanggal menggunakan Moment.js
+    return moment(date).format('MMMM DD, YYYY [at] h:mm:ss.SSS A [UTC]Z');
 }
 
 // GET all articles
