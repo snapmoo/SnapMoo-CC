@@ -2,6 +2,18 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/firestore');
+const moment = require('moment');
+
+function convertTimestampToReadableDate(timestamp) {
+    if (timestamp && timestamp._seconds !== undefined && timestamp._nanoseconds !== undefined) {
+        const date = new Date(timestamp._seconds * 1000 + timestamp._nanoseconds / 1000000);
+        return moment(date).format('MMM DD, YYYY, h:mm:ss.SSS A');
+    } else if (timestamp instanceof Date) {
+        return moment(timestamp).format('MMM DD, YYYY, h:mm:ss.SSS A');
+    } else {
+        return null; // or a default value
+    }
+}
 
 // GET all articles
 router.get('/articles', async (req, res) => {
@@ -14,7 +26,11 @@ router.get('/articles', async (req, res) => {
 
         const articles = [];
         articlesSnapshot.forEach(doc => {
-            articles.push({ id: doc.id, ...doc.data() });
+            const article = doc.data();
+            if (article.date) {
+                article.date = convertTimestampToReadableDate(article.date);
+            }
+            articles.push({ id: doc.id, ...article });
         });
 
         res.status(200).json({ message: 'Articles retrieved successfully.', data: articles });
