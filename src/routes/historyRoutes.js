@@ -10,7 +10,7 @@ async function getCurrentMaxPredictId() {
         const doc = snapshot.docs[0];
         return doc.data().predict_id;
     } else {
-        return 0; // If no documents found, start predict_id from 0
+        return 0; 
     }
 }
 
@@ -37,7 +37,7 @@ router.post('/history', authMiddleware, async (req, res) => {
 
         const newHistory = {
             user_id: req.userId,
-            predict_id, // Use predict_id instead of prediction_id
+            predict_id, 
             result,
             score,
             created_at: new Date(created_at),
