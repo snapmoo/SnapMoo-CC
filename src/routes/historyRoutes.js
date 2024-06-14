@@ -1,6 +1,5 @@
 // src/routes/historyRoutes.js
 const express = require('express');
-const { v4: uuidv4 } = require('uuid'); 
 const router = express.Router();
 const db = require('../config/firestore');
 const authMiddleware = require('../middleware/auth');
@@ -19,24 +18,16 @@ router.get('/history', authMiddleware, async (req, res) => {
 
 // POST add prediction history
 router.post('/history', authMiddleware, async (req, res) => {
-    const { result, score, created_at } = req.body; // Remove prediction_id from the request body
+    const { result, score, created_at } = req.body; // Tidak lagi menerima prediction_id dari body
     try {
-        const prediction_id = uuidv4(); 
-        console.log('Generated prediction_id:', prediction_id); 
-
         const newHistory = {
             user_id: req.userId,
-            prediction_id,
             result,
             score,
             created_at: new Date(created_at),
             is_saved: false
         };
-
-        // Log the newHistory object to verify its contents
-        console.log('New History Object:', newHistory);
-
-        const historyRef = await db.collection('history').add(newHistory);
+        const historyRef = await db.collection('history').add(newHistory); // ID dokumen dihasilkan secara otomatis
         res.status(201).json({ message: 'Prediction history added successfully.', data: { id: historyRef.id, ...newHistory } });
     } catch (error) {
         console.error(error);
