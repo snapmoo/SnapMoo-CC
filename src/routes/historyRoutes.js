@@ -3,7 +3,6 @@ const router = express.Router();
 const db = require('../config/firestore');
 const authMiddleware = require('../middleware/auth');
 
-// Function to get the current highest predict_id
 async function getCurrentMaxPredictId() {
     const snapshot = await db.collection('history').orderBy('predict_id', 'desc').limit(1).get();
     if (!snapshot.empty) {
