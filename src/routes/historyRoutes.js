@@ -1,6 +1,6 @@
 // src/routes/historyRoutes.js
 const express = require('express');
-const { v4: uuidv4 } = require('uuid'); // Import UUID library
+const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 const db = require('../config/firestore');
 const authMiddleware = require('../middleware/auth');
