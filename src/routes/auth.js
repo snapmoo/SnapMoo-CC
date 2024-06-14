@@ -61,7 +61,7 @@ router.post('/login', [
             return res.status(401).json({ message: 'Invalid email or password.' });
         }
 
-        const token = jwt.sign({ id: userDoc.id }, secret, { expiresIn: '1h' });
+        const token = jwt.sign({ id: userDoc.id }, secret);
 
         // Construct photo URL if exists
         const photoURL = user.photo ? `${req.protocol}://${req.get('host')}/uploads/${user.photo}` : null;
