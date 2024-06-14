@@ -6,8 +6,14 @@ const db = require('../config/firestore');
 const moment = require('moment');
 
 function convertTimestampToReadableDate(timestamp) {
-    const date = new Date(timestamp._seconds * 1000 + timestamp._nanoseconds / 1000000);
-    return moment(date).format('MMM DD, YYYY');
+    if (timestamp && timestamp._seconds !== undefined && timestamp._nanoseconds !== undefined) {
+        const date = new Date(timestamp._seconds * 1000 + timestamp._nanoseconds / 1000000);
+        return moment(date).format('MMM DD, YYYY');
+    } else if (timestamp instanceof Date) {
+        return moment(timestamp).format('MMM DD, YYYY');
+    } else {
+        return null; // or a default value
+    }
 }
 
 // GET all articles
