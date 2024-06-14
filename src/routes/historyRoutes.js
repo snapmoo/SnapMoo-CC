@@ -21,7 +21,7 @@ router.get('/history', authMiddleware, async (req, res) => {
 router.post('/history', authMiddleware, async (req, res) => {
     const { result, score, created_at } = req.body; // Remove prediction_id from the request body
     try {
-        const prediction_id = uuidv4(); // Generate a new prediction_id
+        const prediction_id = uuidv4(); 
         const newHistory = {
             user_id: req.userId,
             prediction_id,
