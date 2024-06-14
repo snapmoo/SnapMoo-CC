@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/firestore');
 const authMiddleware = require('../middleware/auth');
+const upload = require('../middleware/upload');
 
 // GET prediction history
 router.get('/history', authMiddleware, async (req, res) => {
@@ -17,12 +18,11 @@ router.get('/history', authMiddleware, async (req, res) => {
 });
 
 // POST add prediction history
-router.post('/history', authMiddleware, async (req, res) => {
-    const { prediction_id, result, score, created_at } = req.body;
+router.post('/history', authMiddleware, upload.single('photo'), async (req, res) => {
+    const { result, score, created_at } = req.body;
     try {
         const newHistory = {
             user_id: req.userId,
-            prediction_id,
             result,
             score,
             created_at: new Date(created_at),
