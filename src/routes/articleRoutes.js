@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/firestore');
+const moment = require('moment');
 
 function convertTimestampToReadableDate(timestamp) {
     const date = new Date(timestamp._seconds * 1000 + timestamp._nanoseconds / 1000000);
@@ -23,6 +24,7 @@ router.get('/articles', async (req, res) => {
             const article = doc.data();
             if (article.date) {
                 article.date = convertTimestampToReadableDate(article.date);
+                console.log(article.date)
             }
             articles.push({ id: doc.id, ...article });
         });
