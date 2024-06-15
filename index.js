@@ -7,12 +7,6 @@ const path = require('path');
 const app = express();
 const port = 8080;
 
-// Initialize Firebase Admin SDK
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://snapmoo.firebaseio.com'
-});
-
 const authRoutes = require('./src/routes/auth').router;
 const userRoutes = require('./src/routes/user');
 const reportRoutes = require('./src/routes/report');
