@@ -6,7 +6,7 @@ const authMiddleware = require('../middleware/auth');
 const admin = require('firebase-admin');
 const upload = require('../middleware/upload');
 
-// GET prediction history
+// GET prediction history for the authenticated user
 router.get('/history', authMiddleware, async (req, res) => {
     try {
         const historySnapshot = await db.collection('history').where('user_id', '==', req.userId).get();
@@ -18,7 +18,7 @@ router.get('/history', authMiddleware, async (req, res) => {
     }
 });
 
-// POST add prediction history
+// POST add prediction history for the authenticated user
 router.post('/history', authMiddleware, upload.single('photo'), async (req, res) => {
     const { result, score, created_at } = req.body;
     try {
@@ -43,47 +43,46 @@ router.post('/history', authMiddleware, upload.single('photo'), async (req, res)
 
             stream.on('error', (err) => {
                 console.error('Upload error:', err);
-                return res.status(500).json({ message: 'Terjadi kesalahan saat mengunggah file. Silakan coba lagi nanti.' });
+                return res.status(500).json({ message: 'Error uploading file. Please try again later.' });
             });
 
             stream.on('finish', async () => {
-                // Make the file publicly accessible
                 await file.makePublic();
                 newHistory.photo = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
 
-                // Save history to Firestore
                 try {
                     const historyRef = await db.collection('history').add(newHistory);
                     res.status(201).json({ message: 'Prediction history added successfully.', data: { id: historyRef.id, ...newHistory } });
                 } catch (error) {
                     console.error('Firestore error:', error);
-                    res.status(500).json({ message: 'Terjadi kesalahan saat menyimpan riwayat prediksi. Silakan coba lagi nanti.' });
+                    res.status(500).json({ message: 'Error saving prediction history. Please try again later.' });
                 }
             });
 
             stream.end(req.file.buffer);
         } else {
-            // Save history to Firestore if no file uploaded
             const historyRef = await db.collection('history').add(newHistory);
             res.status(201).json({ message: 'Prediction history added successfully.', data: { id: historyRef.id, ...newHistory } });
         }
     } catch (error) {
-        console.error('Unexpected error:', error); // Logging error secara jelas
-        res.status(500).json({ message: 'Terjadi kesalahan yang tidak terduga. Silakan coba lagi nanti.' });
+        console.error('Unexpected error:', error);
+        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 });
 
-// PUT update saved status for a history record
-router.put('/history/:id/save', authMiddleware, async (req, res) => {
+// PUT update saved status for a history record for the authenticated user
+router.put('/history/save/:id', authMiddleware, async (req, res) => {
     try {
         const historyRef = db.collection('history').doc(req.params.id);
         const historyDoc = await historyRef.get();
         if (!historyDoc.exists) {
             return res.status(404).json({ message: 'History record not found.' });
         }
+        if (historyDoc.data().user_id !== req.userId) {
+            return res.status(403).json({ message: 'Forbidden. You do not have access to this record.' });
+        }
 
-        const isSaved = req.body.is_saved; // Set is_saved status from request body
-
+        const isSaved = req.body.is_saved;
         await historyRef.update({ is_saved: isSaved });
         res.status(200).json({ message: 'History record saved status updated successfully.' });
     } catch (error) {
@@ -92,7 +91,7 @@ router.put('/history/:id/save', authMiddleware, async (req, res) => {
     }
 });
 
-// GET all bookmarked history
+// GET all bookmarked history for the authenticated user
 router.get('/history/saved', authMiddleware, async (req, res) => {
     try {
         const savedHistorySnapshot = await db.collection('history').where('user_id', '==', req.userId).where('is_saved', '==', true).get();
