@@ -3,10 +3,10 @@ const multer = require('multer');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
-// Initialize Firebase Admin SDK (pastikan sudah terhubung dengan proyek Firebase Anda)
+// Initialize Firebase Admin SDK 
 admin.initializeApp({
     credential: admin.credential.applicationDefault(),
-    storageBucket: 'gs://apksnapmoo.appspot.com' // Ganti dengan URL bucket storage Anda
+    storageBucket: 'gs://apksnapmoo.appspot.com' 
 });
 
 const storage = multer.memoryStorage();
