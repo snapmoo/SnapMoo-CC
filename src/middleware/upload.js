@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 // Initialize Firebase Admin SDK 
 admin.initializeApp({
     credential: admin.credential.applicationDefault(),
-    storageBucket: 'gs://apksnapmoo.appspot.com' 
+    storageBucket: 'apksnapmoo.appspot.com' 
 });
 
 const storage = multer.memoryStorage();
