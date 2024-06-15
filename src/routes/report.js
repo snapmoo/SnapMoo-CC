@@ -10,7 +10,14 @@ const db = require('../config/firestore');
 router.get('/report', authMiddleware, async (req, res) => {
     try {
         const reportsSnapshot = await db.collection('reports').get();
-        const reports = reportsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const reports = reportsSnapshot.docs.map(doc => {
+            const report = doc.data();
+            // Construct photo URL if exists
+            if (report.photo) {
+                report.photo = `${req.protocol}://${req.get('host')}/${report.photo}`;
+            }
+            return { id: doc.id, ...report };
+        });
         res.json({ message: 'Reports retrieved successfully.', data: reports });
     } catch (error) {
         console.error(error);
@@ -26,7 +33,12 @@ router.get('/report/:id', authMiddleware, async (req, res) => {
         if (!reportDoc.exists) {
             return res.status(404).json({ message: 'Report not found.' });
         }
-        res.json({ message: 'Report details retrieved successfully.', data: { id: reportDoc.id, ...reportDoc.data() } });
+        const report = reportDoc.data();
+        // Construct photo URL if exists
+        if (report.photo) {
+            report.photo = `${req.protocol}://${req.get('host')}/${report.photo}`;
+        }
+        res.json({ message: 'Report details retrieved successfully.', data: { id: reportDoc.id, ...report } });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
