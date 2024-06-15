@@ -19,36 +19,6 @@ router.get('/report', authMiddleware, async (req, res) => {
     }
 });
 
-// GET report by ID
-router.put('/report/:id', authMiddleware, upload.single('photo'), async (req, res) => {
-    const { id } = req.params;
-    const { name, phone_number } = req.body;
-
-    try {
-        const reportRef = db.collection('reports').doc(id);
-        const reportDoc = await reportRef.get();
-
-        if (!reportDoc.exists) {
-            return res.status(404).json({ message: 'Report not found.' });
-        }
-
-        const updatedData = {
-            name: name || reportDoc.data().name,
-            phone_number: phone_number || reportDoc.data().phone_number,
-            photo: req.file ? req.file.path : reportDoc.data().photo
-        };
-
-        await reportRef.update(updatedData);
-
-        res.json({ message: 'Report updated successfully.', data: { id: id, ...updatedData } });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
-    }
-});
-
-
-// POST new report
 // POST new report
 router.post('/report', upload.single('photo'), async (req, res) => {
     const { name, email, phone_number, address, city, province, many_have, affected_body_part, prediction, score, latitude, longitude } = req.body;
@@ -113,49 +83,15 @@ router.post('/report', upload.single('photo'), async (req, res) => {
     }
 });
 
-
-// PUT update report by ID
-router.put('/report/:id', authMiddleware, upload.single('photo'), [
-    body('name').optional().notEmpty().withMessage('Name must not be empty'),
-    body('phone_number').optional().notEmpty().withMessage('Phone number must not be empty')
-], async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { name, phone_number } = req.body;
+// GET report by ID
+router.get('/report/:id', authMiddleware, async (req, res) => {
     try {
         const reportRef = db.collection('reports').doc(req.params.id);
         const reportDoc = await reportRef.get();
         if (!reportDoc.exists) {
             return res.status(404).json({ message: 'Report not found.' });
         }
-
-        const updatedData = {
-            name: name || reportDoc.data().name,
-            phone_number: phone_number || reportDoc.data().phone_number,
-            photo: req.file ? req.file.path : reportDoc.data().photo
-        };
-        await reportRef.update(updatedData);
-        res.json({ message: 'Report updated successfully.', data: { id: req.params.id, ...updatedData } });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
-    }
-});
-
-// DELETE report by ID
-router.delete('/report/:id', authMiddleware, async (req, res) => {
-    try {
-        const reportRef = db.collection('reports').doc(req.params.id);
-        const reportDoc = await reportRef.get();
-        if (!reportDoc.exists) {
-            return res.status(404).json({ message: 'Report not found.' });
-        }
-
-        await reportRef.delete();
-        res.json({ message: 'Report deleted successfully.' });
+        res.json({ message: 'Report details retrieved successfully.', data: { id: reportDoc.id, ...reportDoc.data() } });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
