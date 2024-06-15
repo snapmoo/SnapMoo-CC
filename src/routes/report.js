@@ -69,10 +69,10 @@ router.post('/report', authMiddleware, async (req, res) => {
             createdAt: new Date()
         };
 
-        // Periksa jika foto diunggah
+        // Periksa 
         if (req.file) {
             const fileUpload = await admin.storage().bucket().upload(req.file.path, {
-                destination: `reports/${req.file.originalname}`, // Sesuaikan path destinasi sesuai kebutuhan Anda
+                destination: `reports/${req.file.originalname}`, 
                 metadata: {
                     contentType: req.file.mimetype
                 }
