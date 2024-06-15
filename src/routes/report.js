@@ -49,9 +49,10 @@ router.put('/report/:id', authMiddleware, upload.single('photo'), async (req, re
 
 
 // POST new report
-router.post('/report', authMiddleware, async (req, res) => {
+// POST new report
+router.post('/report', upload.single('photo'), async (req, res) => {
     const { name, email, phone_number, address, city, province, many_have, affected_body_part, prediction, score, latitude, longitude } = req.body;
-    
+
     try {
         const newReport = {
             name,
@@ -69,27 +70,49 @@ router.post('/report', authMiddleware, async (req, res) => {
             createdAt: new Date()
         };
 
-        // Periksa 
         if (req.file) {
-            const fileUpload = await admin.storage().bucket().upload(req.file.path, {
-                destination: `reports/${req.file.originalname}`, 
+            const bucket = admin.storage().bucket();
+            const fileName = `reports/${req.file.originalname}`;
+            const file = bucket.file(fileName);
+
+            const stream = file.createWriteStream({
                 metadata: {
                     contentType: req.file.mimetype
                 }
             });
 
-            // Dapatkan URL file yang diunggah
-            newReport.photo = fileUpload[0].metadata.mediaLink;
-        }
+            stream.on('error', (err) => {
+                console.error('Upload error:', err);
+                return res.status(500).json({ message: 'Terjadi kesalahan saat mengunggah file. Silakan coba lagi nanti.' });
+            });
 
-        // Tambahkan data laporan ke Firestore
-        const reportRef = await db.collection('reports').add(newReport);
-        res.json({ message: 'Laporan berhasil ditambahkan.', data: { id: reportRef.id, ...newReport } });
+            stream.on('finish', async () => {
+                // Make the file publicly accessible
+                await file.makePublic();
+                newReport.photo = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+
+                // Save report to Firestore
+                try {
+                    const reportRef = await db.collection('reports').add(newReport);
+                    res.json({ message: 'Laporan berhasil ditambahkan.', data: { id: reportRef.id, ...newReport } });
+                } catch (error) {
+                    console.error('Firestore error:', error);
+                    res.status(500).json({ message: 'Terjadi kesalahan saat menyimpan laporan. Silakan coba lagi nanti.' });
+                }
+            });
+
+            stream.end(req.file.buffer);
+        } else {
+            // Save report to Firestore if no file uploaded
+            const reportRef = await db.collection('reports').add(newReport);
+            res.json({ message: 'Laporan berhasil ditambahkan.', data: { id: reportRef.id, ...newReport } });
+        }
     } catch (error) {
-        console.error(error);
+        console.error('Unexpected error:', error); // Logging error secara jelas
         res.status(500).json({ message: 'Terjadi kesalahan yang tidak terduga. Silakan coba lagi nanti.' });
     }
 });
+
 
 // PUT update report by ID
 router.put('/report/:id', authMiddleware, upload.single('photo'), [
