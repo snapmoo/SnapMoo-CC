@@ -1,17 +1,8 @@
+// src/routes/historyRoutes.js
 const express = require('express');
 const router = express.Router();
 const db = require('../config/firestore');
 const authMiddleware = require('../middleware/auth');
-
-async function getCurrentMaxPredictId() {
-    const snapshot = await db.collection('history').orderBy('predict_id', 'desc').limit(1).get();
-    if (!snapshot.empty) {
-        const doc = snapshot.docs[0];
-        return doc.data().predict_id;
-    } else {
-        return 0; 
-    }
-}
 
 // GET prediction history
 router.get('/history', authMiddleware, async (req, res) => {
@@ -27,23 +18,16 @@ router.get('/history', authMiddleware, async (req, res) => {
 
 // POST add prediction history
 router.post('/history', authMiddleware, async (req, res) => {
-    const { result, score, created_at } = req.body;
+    const { result, score, created_at } = req.body; // Tidak lagi menerima prediction_id dari body
     try {
-        const currentMaxPredictId = await getCurrentMaxPredictId();
-        const prediction_id = currentMaxPredictId + 1;
-
-        console.log('Generated predict_id:', prediction_id);
-
         const newHistory = {
             user_id: req.userId,
-            predict_id, 
             result,
             score,
             created_at: new Date(created_at),
             is_saved: false
         };
-
-        const historyRef = await db.collection('history').add(newHistory);
+        const historyRef = await db.collection('history').add(newHistory); // ID dokumen dihasilkan secara otomatis
         res.status(201).json({ message: 'Prediction history added successfully.', data: { id: historyRef.id, ...newHistory } });
     } catch (error) {
         console.error(error);
@@ -60,7 +44,7 @@ router.put('/history/:id/save', authMiddleware, async (req, res) => {
             return res.status(404).json({ message: 'History record not found.' });
         }
 
-        const isSaved = req.body.is_saved;
+        const isSaved = req.body.is_saved; // Set is_saved status from request body
 
         await historyRef.update({ is_saved: isSaved });
         res.status(200).json({ message: 'History record saved status updated successfully.' });
