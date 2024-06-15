@@ -1,16 +1,15 @@
-// src/routes/report.js
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/auth');
 const admin = require('firebase-admin');
-const upload = require('../middleware/upload'); 
+const upload = require('../middleware/upload');
 const { body, validationResult } = require('express-validator');
 const db = require('../config/firestore');
 
-// GET all reports
+// GET all reports (filtered by authenticated user)
 router.get('/report', authMiddleware, async (req, res) => {
     try {
-        const reportsSnapshot = await db.collection('reports').get();
+        const reportsSnapshot = await db.collection('reports').where('user_id', '==', req.userId).get();
         const reports = reportsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.json({ message: 'Reports retrieved successfully.', data: reports });
     } catch (error) {
@@ -19,12 +18,13 @@ router.get('/report', authMiddleware, async (req, res) => {
     }
 });
 
-// POST new report
-router.post('/report', upload.single('photo'), async (req, res) => {
+// POST new report for the authenticated user
+router.post('/report', authMiddleware, upload.single('photo'), async (req, res) => {
     const { name, email, phone_number, address, city, province, many_have, affected_body_part, prediction, score, latitude, longitude } = req.body;
 
     try {
         const newReport = {
+            user_id: req.userId,
             name,
             email,
             phone_number,
@@ -40,6 +40,7 @@ router.post('/report', upload.single('photo'), async (req, res) => {
             createdAt: new Date()
         };
 
+        // Handle file upload if available
         if (req.file) {
             const bucket = admin.storage().bucket();
             const fileName = `reports/${req.file.originalname}`;
@@ -83,14 +84,20 @@ router.post('/report', upload.single('photo'), async (req, res) => {
     }
 });
 
-// GET report by ID
+// GET report by ID (ensure only the owner can access)
 router.get('/report/:id', authMiddleware, async (req, res) => {
     try {
         const reportRef = db.collection('reports').doc(req.params.id);
         const reportDoc = await reportRef.get();
+
         if (!reportDoc.exists) {
             return res.status(404).json({ message: 'Report not found.' });
         }
+
+        if (reportDoc.data().user_id !== req.userId) {
+            return res.status(403).json({ message: 'Unauthorized access to view report.' });
+        }
+
         res.json({ message: 'Report details retrieved successfully.', data: { id: reportDoc.id, ...reportDoc.data() } });
     } catch (error) {
         console.error(error);
