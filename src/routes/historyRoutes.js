@@ -3,6 +3,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/firestore');
 const authMiddleware = require('../middleware/auth');
+const admin = require('firebase-admin');
+const upload = require('../middleware/upload');
 
 // GET prediction history
 router.get('/history', authMiddleware, async (req, res) => {
@@ -17,8 +19,8 @@ router.get('/history', authMiddleware, async (req, res) => {
 });
 
 // POST add prediction history
-router.post('/history', authMiddleware, async (req, res) => {
-    const { result, score, created_at } = req.body; // Tidak lagi menerima prediction_id dari body
+router.post('/history', authMiddleware, upload.single('photo'), async (req, res) => {
+    const { result, score, created_at } = req.body;
     try {
         const newHistory = {
             user_id: req.userId,
@@ -27,11 +29,47 @@ router.post('/history', authMiddleware, async (req, res) => {
             created_at: new Date(created_at),
             is_saved: false
         };
-        const historyRef = await db.collection('history').add(newHistory); // ID dokumen dihasilkan secara otomatis
-        res.status(201).json({ message: 'Prediction history added successfully.', data: { id: historyRef.id, ...newHistory } });
+
+        if (req.file) {
+            const bucket = admin.storage().bucket();
+            const fileName = `history/${req.file.originalname}`;
+            const file = bucket.file(fileName);
+
+            const stream = file.createWriteStream({
+                metadata: {
+                    contentType: req.file.mimetype
+                }
+            });
+
+            stream.on('error', (err) => {
+                console.error('Upload error:', err);
+                return res.status(500).json({ message: 'Terjadi kesalahan saat mengunggah file. Silakan coba lagi nanti.' });
+            });
+
+            stream.on('finish', async () => {
+                // Make the file publicly accessible
+                await file.makePublic();
+                newHistory.photo = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+
+                // Save history to Firestore
+                try {
+                    const historyRef = await db.collection('history').add(newHistory);
+                    res.status(201).json({ message: 'Prediction history added successfully.', data: { id: historyRef.id, ...newHistory } });
+                } catch (error) {
+                    console.error('Firestore error:', error);
+                    res.status(500).json({ message: 'Terjadi kesalahan saat menyimpan riwayat prediksi. Silakan coba lagi nanti.' });
+                }
+            });
+
+            stream.end(req.file.buffer);
+        } else {
+            // Save history to Firestore if no file uploaded
+            const historyRef = await db.collection('history').add(newHistory);
+            res.status(201).json({ message: 'Prediction history added successfully.', data: { id: historyRef.id, ...newHistory } });
+        }
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
+        console.error('Unexpected error:', error); // Logging error secara jelas
+        res.status(500).json({ message: 'Terjadi kesalahan yang tidak terduga. Silakan coba lagi nanti.' });
     }
 });
 
