@@ -33,7 +33,7 @@ router.get('/articles/search', async (req, res) => {
         let articlesRef = db.collection('articles');
 
         if (query) {
-            articlesRef = articlesRef.where('Judul Berita', '>=', query).where('Judul Berita', '<=', query + '\uf8ff');
+            articlesRef = articlesRef.where('title', 'like', `%${query}%`).orderBy("desc");
         }
 
         const articlesSnapshot = await articlesRef.get();
