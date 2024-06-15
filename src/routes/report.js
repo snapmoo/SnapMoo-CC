@@ -2,7 +2,8 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/auth');
-const upload = require('../middleware/upload');
+const admin = require('firebase-admin');
+const upload = require('../middleware/upload'); 
 const { body, validationResult } = require('express-validator');
 const db = require('../config/firestore');
 
@@ -10,14 +11,7 @@ const db = require('../config/firestore');
 router.get('/report', authMiddleware, async (req, res) => {
     try {
         const reportsSnapshot = await db.collection('reports').get();
-        const reports = reportsSnapshot.docs.map(doc => {
-            const report = doc.data();
-            // Construct photo URL if exists
-            if (report.photo) {
-                report.photo = `${req.protocol}://${req.get('host')}/${report.photo}`;
-            }
-            return { id: doc.id, ...report };
-        });
+        const reports = reportsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.json({ message: 'Reports retrieved successfully.', data: reports });
     } catch (error) {
         console.error(error);
@@ -26,46 +20,38 @@ router.get('/report', authMiddleware, async (req, res) => {
 });
 
 // GET report by ID
-router.get('/report/:id', authMiddleware, async (req, res) => {
+router.put('/report/:id', authMiddleware, upload.single('photo'), async (req, res) => {
+    const { id } = req.params;
+    const { name, phone_number } = req.body;
+
     try {
-        const reportRef = db.collection('reports').doc(req.params.id);
+        const reportRef = db.collection('reports').doc(id);
         const reportDoc = await reportRef.get();
+
         if (!reportDoc.exists) {
             return res.status(404).json({ message: 'Report not found.' });
         }
-        const report = reportDoc.data();
-        // Construct photo URL if exists
-        if (report.photo) {
-            report.photo = `${req.protocol}://${req.get('host')}/${report.photo}`;
-        }
-        res.json({ message: 'Report details retrieved successfully.', data: { id: reportDoc.id, ...report } });
+
+        const updatedData = {
+            name: name || reportDoc.data().name,
+            phone_number: phone_number || reportDoc.data().phone_number,
+            photo: req.file ? req.file.path : reportDoc.data().photo
+        };
+
+        await reportRef.update(updatedData);
+
+        res.json({ message: 'Report updated successfully.', data: { id: id, ...updatedData } });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 });
 
-// POST new report
-router.post('/report', authMiddleware, upload.single('photo'), [
-    body('name').notEmpty().withMessage('Name is required'),
-    body('email').isEmail().withMessage('Invalid email'),
-    body('phone_number').notEmpty().withMessage('Phone number is required'),
-    body('address').notEmpty().withMessage('Address is required'),
-    body('city').notEmpty().withMessage('City is required'),
-    body('province').notEmpty().withMessage('Province is required'),
-    body('many_have').isInt({ min: 1 }).withMessage('Must be at least 1'),
-    body('affected_body_part').notEmpty().withMessage('Affected body part is required'),
-    body('prediction').notEmpty().withMessage('Prediction is required'),
-    body('score').isInt({ min: 0 , max: 100 }).withMessage('Score must be between 0 and 100'),
-    body('latitude').optional().isFloat().withMessage('Latitude must be a number'),
-    body('longitude').optional().isFloat().withMessage('Longitude must be a number')
-], async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
 
+// POST new report
+router.post('/report', authMiddleware, async (req, res) => {
     const { name, email, phone_number, address, city, province, many_have, affected_body_part, prediction, score, latitude, longitude } = req.body;
+    
     try {
         const newReport = {
             name,
@@ -80,14 +66,28 @@ router.post('/report', authMiddleware, upload.single('photo'), [
             score,
             latitude: parseFloat(latitude) || null,
             longitude: parseFloat(longitude) || null,
-            photo: req.file ? req.file.path : null,
             createdAt: new Date()
         };
+
+        // Periksa jika foto diunggah
+        if (req.file) {
+            const fileUpload = await admin.storage().bucket().upload(req.file.path, {
+                destination: `reports/${req.file.originalname}`, // Sesuaikan path destinasi sesuai kebutuhan Anda
+                metadata: {
+                    contentType: req.file.mimetype
+                }
+            });
+
+            // Dapatkan URL file yang diunggah
+            newReport.photo = fileUpload[0].metadata.mediaLink;
+        }
+
+        // Tambahkan data laporan ke Firestore
         const reportRef = await db.collection('reports').add(newReport);
-        res.json({ message: 'Report added successfully.', data: { id: reportRef.id, ...newReport } });
+        res.json({ message: 'Laporan berhasil ditambahkan.', data: { id: reportRef.id, ...newReport } });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
+        res.status(500).json({ message: 'Terjadi kesalahan yang tidak terduga. Silakan coba lagi nanti.' });
     }
 });
 
