@@ -1,22 +1,26 @@
-const multer = require('multer');
 const admin = require('firebase-admin');
+const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 
-// Ensure the uploads directory exists
-const uploadsDir = path.join(__dirname, '..', 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir);
-}
+// Initialize Firebase Admin SDK (pastikan sudah terhubung dengan proyek Firebase Anda)
+admin.initializeApp({
+    credential: admin.credential.applicationDefault(),
+    storageBucket: 'gs://apksnapmoo.appspot.com' // Ganti dengan URL bucket storage Anda
+});
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadsDir);
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
+const storage = multer.memoryStorage();
+
+const upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        // Pastikan hanya menerima jenis file tertentu jika diperlukan
+        if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only images and videos are allowed.'));
+        }
     }
 });
 
-const upload = multer({ storage });
 module.exports = upload;
