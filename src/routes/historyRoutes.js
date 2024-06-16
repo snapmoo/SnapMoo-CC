@@ -82,9 +82,9 @@ router.put('/history/save/:id', authMiddleware, async (req, res) => {
             return res.status(403).json({ message: 'Forbidden. You do not have access to this record.' });
         }
 
-        const isSaved = req.body.is_saved;
+        const isSaved = req.body.is_saved === true || req.body.is_saved === "true";
         await historyRef.update({ is_saved: isSaved });
-        res.status(200).json({ message: 'History record saved status updated successfully.' });
+        res.status(200).json({ message: 'History record saved status updated successfully.', data: { is_saved: isSaved } });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
