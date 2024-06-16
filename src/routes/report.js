@@ -54,7 +54,7 @@ router.post('/report', authMiddleware, upload.single('photo'), async (req, res) 
 
             stream.on('error', (err) => {
                 console.error('Upload error:', err);
-                return res.status(500).json({ message: 'Terjadi kesalahan saat mengunggah file. Silakan coba lagi nanti.' });
+                return res.status(500).json({ message: 'An error occurred while uploading the file. Please try again later.' });
             });
 
             stream.on('finish', async () => {
@@ -65,10 +65,10 @@ router.post('/report', authMiddleware, upload.single('photo'), async (req, res) 
                 // Save report to Firestore
                 try {
                     const reportRef = await db.collection('reports').add(newReport);
-                    res.json({ message: 'Laporan berhasil ditambahkan.', data: { id: reportRef.id, ...newReport } });
+                    res.json({ message: 'Report added successfully.', data: { id: reportRef.id, ...newReport } });
                 } catch (error) {
                     console.error('Firestore error:', error);
-                    res.status(500).json({ message: 'Terjadi kesalahan saat menyimpan laporan. Silakan coba lagi nanti.' });
+                    res.status(500).json({ message: 'An error occurred while saving the report. Please try again later.' });
                 }
             });
 
@@ -76,11 +76,11 @@ router.post('/report', authMiddleware, upload.single('photo'), async (req, res) 
         } else {
             // Save report to Firestore if no file uploaded
             const reportRef = await db.collection('reports').add(newReport);
-            res.json({ message: 'Laporan berhasil ditambahkan.', data: { id: reportRef.id, ...newReport } });
+            res.json({ message: 'Report added successfully.', data: { id: reportRef.id, ...newReport } });
         }
     } catch (error) {
-        console.error('Unexpected error:', error); // Logging error secara jelas
-        res.status(500).json({ message: 'Terjadi kesalahan yang tidak terduga. Silakan coba lagi nanti.' });
+        console.error('Unexpected error:', error); // Clearly logging error
+        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 });
 
