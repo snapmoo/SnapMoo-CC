@@ -20,13 +20,13 @@ router.get('/history', authMiddleware, async (req, res) => {
 
 // POST add prediction history for the authenticated user
 router.post('/history', authMiddleware, upload.single('photo'), async (req, res) => {
-    const { result, score, created_at } = req.body;
+    const { result, score } = req.body;
     try {
         const newHistory = {
             user_id: req.userId,
             result,
             score,
-            created_at: new Date(created_at),
+            created_at: new Date(),
             is_saved: false
         };
 
