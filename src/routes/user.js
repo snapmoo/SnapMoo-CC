@@ -73,7 +73,7 @@ router.put('/user', authMiddleware, upload.single('photo'), [
 
             stream.on('error', (err) => {
                 console.error('Upload error:', err);
-                return res.status(500).json({ message: 'Terjadi kesalahan saat mengunggah file. Silakan coba lagi nanti.' });
+                return res.status(500).json({ message: 'An error occurred while uploading the file. Please try again later.' });
             });
 
             stream.on('finish', async () => {
@@ -117,7 +117,7 @@ router.put('/user', authMiddleware, upload.single('photo'), [
         }
     } catch (error) {
         console.error('Unexpected error:', error);
-        res.status(500).json({ message: 'Terjadi kesalahan yang tidak terduga. Silakan coba lagi nanti.' });
+        res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 });
 
