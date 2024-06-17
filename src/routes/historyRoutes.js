@@ -9,7 +9,10 @@ const upload = require('../middleware/upload');
 // GET prediction history for the authenticated user
 router.get('/history', authMiddleware, async (req, res) => {
     try {
-        const historySnapshot = await db.collection('history').where('user_id', '==', req.userId).get();
+        const historySnapshot = await db.collection('history')
+            .where('user_id', '==', req.userId)
+            .orderBy('created_at', 'desc')
+            .get();
         const history = historySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.status(200).json({ message: 'Prediction history retrieved successfully.', data: history });
     } catch (error) {
@@ -94,7 +97,11 @@ router.put('/history/save/:id', authMiddleware, async (req, res) => {
 // GET all bookmarked history for the authenticated user
 router.get('/history/saved', authMiddleware, async (req, res) => {
     try {
-        const savedHistorySnapshot = await db.collection('history').where('user_id', '==', req.userId).where('is_saved', '==', true).get();
+        const savedHistorySnapshot = await db.collection('history')
+            .where('user_id', '==', req.userId)
+            .where('is_saved', '==', true)
+            .orderBy('created_at', 'desc')
+            .get();
         const savedHistory = savedHistorySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.status(200).json({ message: 'Saved prediction history retrieved successfully.', data: savedHistory });
     } catch (error) {
