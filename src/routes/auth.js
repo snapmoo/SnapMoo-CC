@@ -64,7 +64,10 @@ router.post('/login', [
         const token = jwt.sign({ id: userDoc.id }, secret);
 
         // Construct photo URL if exists
-        const photoURL = user.photo ? `${req.protocol}://${req.get('host')}/uploads/${user.photo}` : null;
+        let photoURL = null;
+        if (user.photo) {
+            photoURL = `https://storage.googleapis.com/${admin.storage().bucket().name}/${user.photo}`;
+        }
 
         res.json({ 
             message: 'Login successful.', 
@@ -81,5 +84,4 @@ router.post('/login', [
         res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 });
-
 module.exports = { router };
