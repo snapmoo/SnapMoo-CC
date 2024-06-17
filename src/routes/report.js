@@ -9,7 +9,10 @@ const db = require('../config/firestore');
 // GET all reports (filtered by authenticated user)
 router.get('/report', authMiddleware, async (req, res) => {
     try {
-        const reportsSnapshot = await db.collection('reports').where('user_id', '==', req.userId).get();
+        const reportsSnapshot = await db.collection('reports')
+            .where('user_id', '==', req.userId)
+            .orderBy('createdAt', 'desc')
+            .get();
         const reports = reportsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.json({ message: 'Reports retrieved successfully.', data: reports });
     } catch (error) {
@@ -17,6 +20,7 @@ router.get('/report', authMiddleware, async (req, res) => {
         res.status(500).json({ message: 'An unexpected error occurred. Please try again later.' });
     }
 });
+
 
 // POST new report for the authenticated user
 router.post('/report', authMiddleware, upload.single('photo'), async (req, res) => {
