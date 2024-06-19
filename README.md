@@ -11,7 +11,7 @@ The Architecture overview of the Snapmoo application encompasses the entire proc
 
 # Endpoint
 ## Base URL: https://apksnapmoo-ialuzwj3ca-et.a.run.app  
-### /api
+### BRANCH: /api
 This is the source code for the endpoints available in our GitHub repository for further exploration. There are API source codes such as AUTH, USER, HISTORY, and REPORT API source codes  
 **AUTH:**
 - POST Register user
