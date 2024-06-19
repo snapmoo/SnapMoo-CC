@@ -3,7 +3,7 @@ Overview
 Cloud Computing is responsible for managing the flow of applications to the database. To manage all this, we need an API that we create using Node JS Express and then deploy through Cloud Run.
 
 Architecture
-https://github.com/snapmoo/SnapMoo-CC/blob/main/infrastuktur.drawio%20(2).png
+![Logo]([https://github.com/nama-user/nama-repo/blob/main/path/to/image.png](https://github.com/snapmoo/SnapMoo-CC/blob/main/infrastuktur.drawio%20(2).png))
 
 
 The infrastructure overview of the Snapmoo application encompasses the entire process from utilizing Node.js Express to generate endpoints, while seamlessly integrating with Google Cloud Platform
