@@ -16,7 +16,7 @@ This is the source code for the endpoints available in our GitHub repository for
 
 # Deploy 
 
-
+![alt text](https://github.com/snapmoo/snapmoo/blob/main/assets/Cloud%20Computing/cloudrun.jpeg?raw-true)
 Built using the Express framework, the API deployed using Cloud Run, and retrieving data from a database deployed using Firestore.
 
 # Tool
