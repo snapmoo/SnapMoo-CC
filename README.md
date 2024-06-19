@@ -5,7 +5,7 @@ Cloud Computing is responsible for managing the flow of applications to the data
 
 # Architecture
 
-![alt text](https://github.com/snapmoo/SnapMoo-CC/blob/main/infrastuktur.drawio%20(2).png?raw-true)
+![alt text](https://github.com/snapmoo/snapmoo/blob/main/assets/Cloud%20Computing/infrastuktur.drawio%20(2).png?raw-true)
 
 The infrastructure overview of the Snapmoo application encompasses the entire process from utilizing Node.js Express to generate endpoints, while seamlessly integrating with Google Cloud Platform
 
