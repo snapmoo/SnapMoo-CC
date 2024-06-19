@@ -1,4 +1,4 @@
-![alt text](https://github.com/snapmoo/snapmoo/blob/main/assets/Cloud%20Computing/gcp.jpg?raw-true)
+![alt text](https://github.com/snapmoo/snapmoo/blob/main/assets/Cloud%20Computing/gcp%20(1).jpg?raw-true)
 
 **Base URL**: https://apksnapmoo-ialuzwj3ca-et.a.run.app
 
