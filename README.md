@@ -12,9 +12,9 @@ The infrastructure overview of the Snapmoo application encompasses the entire pr
 # Endpoint
 ## Base URL: https://apksnapmoo-ialuzwj3ca-et.a.run.app
 **AUTH:**
-POST Register user
+- POST Register user
 /register
-POST Login user
+- POST Login user
 /login
 
 **USER:**
