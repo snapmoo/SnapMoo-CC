@@ -30,24 +30,24 @@ Built using the Express framework, the API deployed using Cloud Run, and retriev
 - Github
 
 # Timeline
-##**Stage 1: Preparation for API Creation**
+## Stage 1: Preparation for API Creation
 In the first stage we prepare the things needed in making rest api, starting fromnNode js , postman, etc. to asking the MD what contract api is needed and claiming GCP dollars from Bangkit to deploy later. 
 
-##**Stage 2: Temporary API Creation**
+## Stage 2: Temporary API Creation
 At this stage we try to create a temporary API according to what has been requested by the MD team. as for some of the stages as follows:
 Create a temporary api that can be run locally using port 8080.
 After completing the creation, we tried it on postman. After trying it for the register and login section, it has run well, but the others still need adjustments.
 After knowing there are some that need adjustments, we reported it to the team, especially to the MD team and they provided some adjustments as well.
 Then we made a new one and can run on local.
 
-##**Stage 3: Configuration with Firestore and Cloud Storage Buckets**
+## Stage 3: Configuration with Firestore and Cloud Storage Buckets
 After creating local-only, we then made adjustments so that it could be configured with firestore as our database repository. We had a little trouble configuring it at first, but after communicating with Advisor, we were able to get it done. After that, we also configured the cloud storage bucket that will store photos for user profiles and cow scan photos from the app later.
 
-##**Stage 4: Upload to Github**
+## Stage 4: Upload to Github
 After the creation is complete, we start to upload to the github repository that was created earlier. This is useful for deploying later in the cloud run.
 
-##**Stage 5: Deploy Cloud Run**
+## Stage 5: Deploy Cloud Run
 After all the preparations had been completed, we then deployed the rest api that we had created earlier using cloud run. After deploying, the base URL has been obtained and can be used by the MD team.
 
-##**Stage 6: Adjustment and Monitoring**
+## Stage 6: Adjustment and Monitoring
 After the deployment is complete, we then make adjustments, starting from the presence of wrong endpoints, leaked data and other adjustments needed by the application. Finally, we monitor whether it is running properly.
