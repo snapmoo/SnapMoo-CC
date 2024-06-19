@@ -73,10 +73,11 @@ In the first stage we prepare the things needed in making rest api, starting fro
 
 ## Stage 2: Temporary API Creation
 At this stage we try to create a temporary API according to what has been requested by the MD team. as for some of the stages as follows:
-Create a temporary api that can be run locally using port 8080.
-After completing the creation, we tried it on postman. After trying it for the register and login section, it has run well, but the others still need adjustments.
-After knowing there are some that need adjustments, we reported it to the team, especially to the MD team and they provided some adjustments as well.
-Then we made a new one and can run on local.
+1. Create a temporary api that can be run locally using port 8080.  
+2. After completing the creation, we tried it on postman.
+3. After trying it for the register and login section, it has run well, but the others still need adjustments.
+4. After knowing there are some that need adjustments, we reported it to the team, especially to the MD team and they provided some adjustments as well.
+5. Then we made a new one and can run on local.
 
 ## Stage 3: Configuration with Firestore and Cloud Storage Buckets
 After creating local-only, we then made adjustments so that it could be configured with firestore as our database repository. We had a little trouble configuring it at first, but after communicating with Advisor, we were able to get it done. After that, we also configured the cloud storage bucket that will store photos for user profiles and cow scan photos from the app later.
