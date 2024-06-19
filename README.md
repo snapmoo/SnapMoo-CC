@@ -1,4 +1,6 @@
-Base URL: https://apksnapmoo-ialuzwj3ca-et.a.run.app
+![alt text](https://github.com/snapmoo/snapmoo/blob/main/assets/Cloud%20Computing/gcp.png?raw-true)
+
+**Base URL**: https://apksnapmoo-ialuzwj3ca-et.a.run.app
 
 # Overview
 Cloud Computing is responsible for managing the flow of applications to the database. To manage all this, we need an API that we create using Node JS Express and then deploy through Cloud Run.
