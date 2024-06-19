@@ -20,7 +20,7 @@ This is the source code for the endpoints available in our GitHub repository for
 - POST Login user
 /login
 
-USER:
+**USER:**
 - GET user profile
 /user
 
