@@ -1,24 +1,24 @@
 Base URL: https://apksnapmoo-ialuzwj3ca-et.a.run.app
 
-Overview
+# Overview
 Cloud Computing is responsible for managing the flow of applications to the database. To manage all this, we need an API that we create using Node JS Express and then deploy through Cloud Run.
-
 Architecture
+
 ![alt text](https://github.com/snapmoo/SnapMoo-CC/blob/main/infrastuktur.drawio%20(2).png?raw-true)
 
 The infrastructure overview of the Snapmoo application encompasses the entire process from utilizing Node.js Express to generate endpoints, while seamlessly integrating with Google Cloud Platform
 
-Endpoint
+# Endpoint
 
 
 This is the source code for the endpoints available in our GitHub repository for further exploration. There are API source codes such as AUTH, USER, HISTORY, and REPORT API source codes
 
-Deploy 
+# Deploy 
 
 
 Built using the Express framework, the API deployed using Cloud Run, and retrieving data from a database deployed using Firestore.
 
-Tool
+# Tool
 - VS Code
 - Postman
 - Node js
@@ -26,7 +26,7 @@ Tool
 - Google Cloud Platform
 - Github
 
-Timeline
+# Timeline
 **Stage 1: Preparation for API Creation**
 In the first stage we prepare the things needed in making rest api, starting fromnNode js , postman, etc. to asking the MD what contract api is needed and claiming GCP dollars from Bangkit to deploy later. 
 
