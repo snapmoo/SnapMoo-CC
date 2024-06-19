@@ -11,37 +11,44 @@ The infrastructure overview of the Snapmoo application encompasses the entire pr
 
 # Endpoint
 ## Base URL: https://apksnapmoo-ialuzwj3ca-et.a.run.app
-**AUTH:**  
-  POST Register user
-- /register  
+AUTH:
+POST Register user
+/register
+
 POST Login user
-- /login
+/login
 
-**USER:**  
+USER:
 GET user profile
-- /user  
+/user
+
 PUT update user profile
-- /user
+/user
 
-**HISTORY:**  
+HISTORY:
 POST add prediction history for the authenticated user
-- /history  
+/history
+
 GET prediction history for the authenticated user
-- /history  
+/history
+
 GET
-- /history/save  
+/history/save
+
 PUT update saved status for a history record for the authenticated user
-- /history/save/:id
+/history/save/:id
 
-**REPORT:**  
-GET all reports 
-- /report  
+REPORT:
+GET all reports
+/report
+
 GET report by ID
-- /report/:id  
-POST new report
-- /report  
+/report/:id
 
-**ARTICLE:**  
+POST new report
+/report
+
+ARTICLE: 
 GET all articles
 - /articles
 This is the source code for the endpoints available in our GitHub repository for further exploration. There are API source codes such as AUTH, USER, HISTORY, and REPORT API source codes
