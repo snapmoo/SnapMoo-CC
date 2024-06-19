@@ -50,8 +50,7 @@ USER:
 /report
 
 **ARTICLE:**
-- GET all articles
-- /articles
+- GET all articles /articles
 
 
 # Deploy 
