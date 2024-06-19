@@ -1,7 +1,5 @@
 ![alt text](https://github.com/snapmoo/snapmoo/blob/main/assets/Cloud%20Computing/gcp%20(1).jpg?raw-true)
 
-**Base URL**: https://apksnapmoo-ialuzwj3ca-et.a.run.app
-
 # Overview
 Cloud Computing is responsible for managing the flow of applications to the database. To manage all this, we need an API that we create using Node JS Express and then deploy through Cloud Run.
 
@@ -12,7 +10,7 @@ Cloud Computing is responsible for managing the flow of applications to the data
 The infrastructure overview of the Snapmoo application encompasses the entire process from utilizing Node.js Express to generate endpoints, while seamlessly integrating with Google Cloud Platform
 
 # Endpoint
-
+**Base URL**: https://apksnapmoo-ialuzwj3ca-et.a.run.app
 
 This is the source code for the endpoints available in our GitHub repository for further exploration. There are API source codes such as AUTH, USER, HISTORY, and REPORT API source codes
 
