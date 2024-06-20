@@ -13,45 +13,27 @@ The Architecture overview of the Snapmoo application encompasses the entire proc
 ## Base URL: https://apksnapmoo-ialuzwj3ca-et.a.run.app  
 ### BRANCH: /api
 This is the source code for the endpoints available in our GitHub repository for further exploration. There are API source codes such as AUTH, USER, HISTORY, and REPORT API source codes  
-**AUTH:**
-- POST Register user
-/register
 
-- POST Login user
-/login
+| Method | Endpoint                                  | Description                                         |
+|--------|-------------------------------------------|-----------------------------------------------------|
+| **AUTH** |
+| POST   | /register                                 | Register user                                       |
+| POST   | /login                                    | Login user                                          |
+| **USER** |
+| GET    | /user                                     | Get user profile                                    |
+| PUT    | /user                                     | Update user profile                                 |
+| **HISTORY** |
+| POST   | /history                                  | Add prediction history for the authenticated user   |
+| GET    | /history                                  | Get prediction history for the authenticated user   |
+| GET    | /history/save                             | Get all bookmarked history for the authenticated user |
+| PUT    | /history/save/:id                         | Update saved status for a history record            |
+| **REPORT** |
+| GET    | /report                                   | Get all reports                                     |
+| GET    | /report/:id                               | Get report by ID                                    |
+| POST   | /report                                   | New report                                          |
+| **ARTICLE** |
+| GET    | /articles                                 | Get all articles                                    |
 
-**USER:**
-- GET user profile
-/user
-
-- PUT update user profile
-/user
-
-**HISTORY:**
-- POST add prediction history for the authenticated user
-/history
-
-- GET prediction history for the authenticated user
-/history
-
-- GET all bookmarked history for the authenticated user
-/history/save
-
-- PUT update saved status for a history record for the authenticated user
-/history/save/:id
-
-**REPORT:**
-- GET all reports
-/report
-
-- GET report by ID
-/report/:id
-
-- POST new report
-/report
-
-**ARTICLE:**
-- GET all articles /articles
 
 
 # Deploy 
