@@ -14,25 +14,21 @@ The Architecture overview of the Snapmoo application encompasses the entire proc
 ### BRANCH: /api
 This is the source code for the endpoints available in our GitHub repository for further exploration. There are API source codes such as AUTH, USER, HISTORY, and REPORT API source codes  
 
-| Method | Endpoint                                  | Description                                         |
-|--------|-------------------------------------------|-----------------------------------------------------|
-| **AUTH** |
-| POST   | /register                                 | Register user                                       |
-| POST   | /login                                    | Login user                                          |
-| **USER** |
-| GET    | /user                                     | Get user profile                                    |
-| PUT    | /user                                     | Update user profile                                 |
-| **HISTORY** |
-| POST   | /history                                  | Add prediction history for the authenticated user   |
-| GET    | /history                                  | Get prediction history for the authenticated user   |
-| GET    | /history/save                             | Get all bookmarked history for the authenticated user |
-| PUT    | /history/save/:id                         | Update saved status for a history record            |
-| **REPORT** |
-| GET    | /report                                   | Get all reports                                     |
-| GET    | /report/:id                               | Get report by ID                                    |
-| POST   | /report                                   | New report                                          |
-| **ARTICLE** |
-| GET    | /articles                                 | Get all articles                                    |
+| Module | Method | Endpoint                                  | Description                                         |
+|-----------|--------|-------------------------------------------|-----------------------------------------------------|
+| **AUTH**  | POST   | /register                                 | Register user                                       |
+|           | POST   | /login                                    | Login user                                          |
+| **USER**  | GET    | /user                                     | Get user profile                                    |
+|           | PUT    | /user                                     | Update user profile                                 |
+| **HISTORY**| POST  | /history                                  | Add prediction history   |
+|           | GET    | /history                                  | Get prediction history   |
+|           | GET    | /history/save                             | Get all saved/bookmarked history  |
+|           | PUT    | /history/save/:id                         | Update saved status for a history record            |
+| **REPORT**| GET    | /report                                   | Get all reports                                     |
+|           | GET    | /report/:id                               | Get report details by ID                                    |
+|           | POST   | /report                                   | Create new report                                          |
+| **ARTICLE**| GET   | /articles                                 | Get all articles                                    |
+
 
 
 
